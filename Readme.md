@@ -1,0 +1,3 @@
+# Owls bot
+
+this is a discord bot for the owls Community...
