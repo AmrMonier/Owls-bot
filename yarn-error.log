@@ -1,0 +1,44 @@
+Arguments: 
+  /home/monier/.nvm/versions/node/v19.5.0/bin/node /home/monier/.nvm/versions/node/v19.5.0/bin/yarn add dicord.js moment-timezone
+
+PATH: 
+  /home/monier/.nvm/versions/node/v19.5.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/monier/.usr/bin:/home/monier/.usr/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  19.5.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/dicord.js: Not found
+      at params.callback [as _callback] (/home/monier/.nvm/versions/node/v19.5.0/lib/node_modules/yarn/lib/cli.js:66145:18)
+      at self.callback (/home/monier/.nvm/versions/node/v19.5.0/lib/node_modules/yarn/lib/cli.js:140890:22)
+      at Request.emit (node:events:512:28)
+      at Request.<anonymous> (/home/monier/.nvm/versions/node/v19.5.0/lib/node_modules/yarn/lib/cli.js:141862:10)
+      at Request.emit (node:events:512:28)
+      at IncomingMessage.<anonymous> (/home/monier/.nvm/versions/node/v19.5.0/lib/node_modules/yarn/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:626:28)
+      at IncomingMessage.emit (node:events:524:35)
+      at endReadableNT (node:internal/streams/readable:1359:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+npm manifest: 
+  {
+    "name": "owls-bot",
+    "version": "1.0.0",
+    "description": "Discord bot for owls community",
+    "main": "index.js",
+    "repository": "git@github.com:AmrMonier/Owls-bot.git",
+    "author": "Amr Monier <a.monier2107@gmail.com>",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
