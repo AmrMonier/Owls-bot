@@ -62,7 +62,7 @@ schedule(
 );
 // Keep the instance Up
 schedule(
-  "*/14 * * * * *",
+  "*/14 * * * *",
   async () => {
     console.log("Ping");
     try {

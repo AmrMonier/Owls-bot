@@ -27,6 +27,8 @@ export const sendRemainingTime = async (channel: TextChannel) => {
   await channel?.bulkDelete(messages);
   const msg = await channel?.send(getRemainingTime());
   const intervalId = setInterval(() => {
+    console.log("===");
+
     const now = new Date();
     const closeHours = new Date();
     closeHours.setHours(18);
