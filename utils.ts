@@ -29,15 +29,23 @@ export const sendRemainingTime = async (channel: TextChannel) => {
   const intervalId = setInterval(() => {
     console.log("===");
 
-    const now = new Date();
-    const closeHours = new Date();
-    closeHours.setHours(18);
-    closeHours.setMinutes(0);
-    closeHours.setSeconds(0);
-    closeHours.setMilliseconds(0);
-    if (now >= closeHours) {
+    try {
+      const now = new Date();
+      const closeHours = new Date();
+      closeHours.setHours(18);
+      closeHours.setMinutes(0);
+      closeHours.setSeconds(0);
+      closeHours.setMilliseconds(0);
+      if (now >= closeHours) {
+        clearInterval(intervalId);
+        return;
+      }
+      if (msg) {
+        msg.edit(getRemainingTime());
+      }
+    } catch (error) {
+      console.error(error);
       clearInterval(intervalId);
     }
-    msg.edit(getRemainingTime());
-  }, 60000);
+  }, 5000);
 };
