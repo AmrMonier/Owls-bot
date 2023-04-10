@@ -68,10 +68,10 @@ schedule(
     try {
       const res = await fetch("https://owls-dicord-bot.onrender.com");
       console.log("Done");
-      
+
     } catch (error) {
       console.log("err");
-      
+
     }
   },
   {
@@ -111,13 +111,14 @@ client.on("ready", async function () {
   sendRemainingTime(channel);
 });
 
-// client.on("messageCreate", async (message) => {
-//   console.log(
-//     `ChannelId: ${message.channelId}, ChannelName: ${
-//       (message.channel as TextChannel)?.name
-//     }`
-//   );
-// });
+client.on("messageCreate", async (message) => {
+  console.log(
+    `ChannelId: ${message.channelId}, ChannelName: ${
+      (message.channel as TextChannel)?.name
+    } content: ${message.content}
+    server: ${message.guildId}`
+  );
+});
 
 // Grant night-owl Role to new Users
 client.on("guildMemberAdd", (member) => {
@@ -128,4 +129,4 @@ client.on("guildMemberAdd", (member) => {
 });
 client.login(process.env.BOT_TOKEN);
 
-console.log(getRemainingTime());
+console.log(getRemainingTime().msg);

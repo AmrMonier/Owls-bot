@@ -1,51 +1,47 @@
-import { TextChannel } from "discord.js";
+import { TextChannel, time } from "discord.js";
 
 export const getRemainingTime = () => {
-  const availableTime = new Date();
-  if (availableTime.getHours() < 18) {
-    availableTime.setHours(18, 0, 0);
-  } else {
-    availableTime.setDate(availableTime.getDate() + 1);
-    availableTime.setHours(6, 0, 0);
-  }
-  const remainingTime = new Date(availableTime.getTime() - Date.now());
-  const remainingTimeString = `${remainingTime
-    .getUTCHours()
+  const now = new Date();
+  const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18);
+  const diff = target.getTime() - now.getTime();
+  let hours = Math.floor(diff / 3600000)
     .toString()
-    .padStart(2, "0")}:${remainingTime
-    .getUTCMinutes()
+    .padStart(2, "0");
+  let minutes = Math.floor((diff % 3600000) / 60000)
     .toString()
-    .padStart(2, "0")}:${remainingTime
-    .getUTCSeconds()
+    .padStart(2, "0");
+  let seconds = Math.floor((diff % 60000) / 1000)
     .toString()
-    .padStart(2, "0")}`;
-  return `Shh Owls are sleeping: ${remainingTimeString}.`;
+    .padStart(2, "0");
+  const remainingTimeString = `${hours}:${minutes}:${seconds}`;
+  return {
+    msg: `Shh Owls are sleeping: ${remainingTimeString}.`,
+    time: diff,
+  };
+  // return `Shh Owls are sleeping: ${remainingTimeString}.`;
 };
 
 export const sendRemainingTime = async (channel: TextChannel) => {
   const messages = await channel.messages.fetch();
   await channel?.bulkDelete(messages);
-  const msg = await channel?.send(getRemainingTime());
-  const intervalId = setInterval(() => {
+  const { msg, time } = getRemainingTime();
+  const message = await channel?.send(msg);
+
+  const intervalId = setInterval(async () => {
     console.log("msg Updated");
 
     try {
-      const now = new Date();
-      const closeHours = new Date();
-      closeHours.setHours(18);
-      closeHours.setMinutes(0);
-      closeHours.setSeconds(0);
-      closeHours.setMilliseconds(0);
-      if (now >= closeHours) {
-        clearInterval(intervalId);
-        return;
-      }
-      if (msg) {
-        msg.edit(getRemainingTime());
+      if (message) {
+        console.log(message.id);
+        await message.edit({ content: getRemainingTime().msg });
+     
       }
     } catch (error) {
       console.error(error);
       clearInterval(intervalId);
     }
   }, 5000);
+  setTimeout(() => {
+    clearInterval(intervalId);
+  }, getRemainingTime().time);
 };
