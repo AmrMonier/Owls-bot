@@ -1,4 +1,4 @@
-import { TextChannel, time } from "discord.js";
+import { TextChannel } from "discord.js";
 
 export const getRemainingTime = () => {
   const now = new Date();
@@ -15,7 +15,7 @@ export const getRemainingTime = () => {
     .padStart(2, "0");
   const remainingTimeString = `${hours}:${minutes}:${seconds}`;
   return {
-    msg: `Shh Owls are sleeping: ${remainingTimeString}.`,
+    msg: `[🦉] Shh Owls are sleeping: ${remainingTimeString}.`,
     time: diff,
   };
   // return `Shh Owls are sleeping: ${remainingTimeString}.`;
@@ -24,17 +24,18 @@ export const getRemainingTime = () => {
 export const sendRemainingTime = async (channel: TextChannel) => {
   const messages = await channel.messages.fetch();
   await channel?.bulkDelete(messages);
-  const { msg, time } = getRemainingTime();
+  const { threads } = await channel.threads.fetch();
+
+  threads.forEach(async (thread) => {
+    await thread.delete();
+  });
+  const { msg } = getRemainingTime();
   const message = await channel?.send(msg);
 
   const intervalId = setInterval(async () => {
-    console.log("msg Updated");
-
     try {
       if (message) {
-        console.log(message.id);
         await message.edit({ content: getRemainingTime().msg });
-     
       }
     } catch (error) {
       console.error(error);

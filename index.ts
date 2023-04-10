@@ -1,9 +1,10 @@
-import { channel } from "diagnostics_channel";
 import { Client, IntentsBitField, Role, TextChannel } from "discord.js";
 import { config } from "dotenv";
 import { schedule } from "node-cron";
 import { getRemainingTime, sendRemainingTime } from "./utils";
 config();
+
+import {KeepAlive} from './server'
 const client = new Client({
   intents: [
     IntentsBitField.Flags.Guilds,
@@ -15,7 +16,6 @@ const client = new Client({
   ],
 });
 
-let nightOWlRole: Role;
 // Open Owls
 schedule(
   "0 18 * * *",
@@ -60,24 +60,6 @@ schedule(
     timezone: "Africa/Cairo",
   }
 );
-// Keep the instance Up
-schedule(
-  "*/14 * * * *",
-  async () => {
-    console.log("Ping");
-    try {
-      const res = await fetch("https://owls-dicord-bot.onrender.com");
-      console.log("Done");
-
-    } catch (error) {
-      console.log("err");
-
-    }
-  },
-  {
-    timezone: "Africa/Cairo",
-  }
-);
 
 client.on("ready", async function () {
   console.log(`Logged in as ${client.user?.tag}`);
@@ -111,14 +93,14 @@ client.on("ready", async function () {
   sendRemainingTime(channel);
 });
 
-client.on("messageCreate", async (message) => {
-  console.log(
-    `ChannelId: ${message.channelId}, ChannelName: ${
-      (message.channel as TextChannel)?.name
-    } content: ${message.content}
-    server: ${message.guildId}`
-  );
-});
+// client.on("messageCreate", async (message) => {
+//   console.log(
+//     `ChannelId: ${message.channelId}, ChannelName: ${
+//       (message.channel as TextChannel)?.name
+//     } content: ${message.content}
+//     server: ${message.guildId}`
+//   );
+// });
 
 // Grant night-owl Role to new Users
 client.on("guildMemberAdd", (member) => {
@@ -128,5 +110,5 @@ client.on("guildMemberAdd", (member) => {
   member.roles.add(nightOWlRole?.id!);
 });
 client.login(process.env.BOT_TOKEN);
-
 console.log(getRemainingTime().msg);
+KeepAlive()
