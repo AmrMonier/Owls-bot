@@ -18,7 +18,7 @@ const client = new Client({
 let nightOWlRole: Role;
 // Open Owls
 schedule(
-  "10 4 * * *",
+  "0 18 * * *",
   async () => {
     console.log("Owls Opened");
     const channel = (await client.channels.fetch(
@@ -41,7 +41,7 @@ schedule(
 
 // Close Owls
 schedule(
-  "15 4 * * *",
+  "0 6 * * *",
   async () => {
     console.log("Owls Closed");
     const channel = (await client.channels.fetch(
@@ -67,7 +67,12 @@ schedule(
     console.log("Ping");
     try {
       const res = await fetch("https://owls-dicord-bot.onrender.com");
-    } catch (error) {}
+      console.log("Done");
+      
+    } catch (error) {
+      console.log("err");
+      
+    }
   },
   {
     timezone: "Africa/Cairo",

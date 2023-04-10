@@ -27,13 +27,13 @@ export const sendRemainingTime = async (channel: TextChannel) => {
   await channel?.bulkDelete(messages);
   const msg = await channel?.send(getRemainingTime());
   const intervalId = setInterval(() => {
-    console.log("===");
+    console.log("msg Updated");
 
     try {
       const now = new Date();
       const closeHours = new Date();
-      closeHours.setHours(4);
-      closeHours.setMinutes(10);
+      closeHours.setHours(18);
+      closeHours.setMinutes(0);
       closeHours.setSeconds(0);
       closeHours.setMilliseconds(0);
       if (now >= closeHours) {
