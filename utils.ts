@@ -39,5 +39,5 @@ export const sendRemainingTime = async (channel: TextChannel) => {
       clearInterval(intervalId);
     }
     msg.edit(getRemainingTime());
-  }, 5000);
+  }, 60000);
 };
