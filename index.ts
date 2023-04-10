@@ -18,7 +18,7 @@ const client = new Client({
 let nightOWlRole: Role;
 // Open Owls
 schedule(
-  "30 3 * * *",
+  "10 4 * * *",
   async () => {
     console.log("Owls Opened");
     const channel = (await client.channels.fetch(
@@ -41,7 +41,7 @@ schedule(
 
 // Close Owls
 schedule(
-  "0 6 * * *",
+  "15 4 * * *",
   async () => {
     console.log("Owls Closed");
     const channel = (await client.channels.fetch(

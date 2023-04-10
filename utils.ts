@@ -32,8 +32,8 @@ export const sendRemainingTime = async (channel: TextChannel) => {
     try {
       const now = new Date();
       const closeHours = new Date();
-      closeHours.setHours(18);
-      closeHours.setMinutes(0);
+      closeHours.setHours(4);
+      closeHours.setMinutes(10);
       closeHours.setSeconds(0);
       closeHours.setMilliseconds(0);
       if (now >= closeHours) {
