@@ -2,7 +2,7 @@ import { channel } from "diagnostics_channel";
 import { Client, IntentsBitField, Role, TextChannel } from "discord.js";
 import { config } from "dotenv";
 import { schedule } from "node-cron";
-import { getRemainingTime } from "./utils";
+import { getRemainingTime, sendRemainingTime } from "./utils";
 config();
 const client = new Client({
   intents: [
@@ -33,7 +33,6 @@ schedule(
     });
     const messages = await channel.messages.fetch();
     await channel?.bulkDelete(messages);
-    
   },
   {
     timezone: "Africa/Cairo",
@@ -55,21 +54,7 @@ schedule(
       SendMessages: false,
       ViewChannel: true,
     });
-    const messages = await channel.messages.fetch();
-    await channel?.bulkDelete(messages);
-    const msg = await channel?.send(getRemainingTime());
-    const intervalId = setInterval(() => {
-      const now = new Date();
-      const closeHours = new Date();
-      closeHours.setHours(18);
-      closeHours.setMinutes(0);
-      closeHours.setSeconds(0);
-      closeHours.setMilliseconds(0);
-      if (now >= closeHours) {
-        clearInterval(intervalId);
-      }
-      msg.edit(getRemainingTime());
-    }, 5000);
+    sendRemainingTime(channel);
   },
   {
     timezone: "Africa/Cairo",
@@ -80,11 +65,11 @@ client.on("ready", async function () {
   console.log(`Logged in as ${client.user?.tag}`);
 
   const guild = client.guilds.cache.get(process.env.GUILD_ID!);
-  
+
   let nightOWlRole = guild?.roles.cache.find(
     (role) => role.name === "night-owl"
   );
-  
+
   if (!nightOWlRole) {
     nightOWlRole = await guild?.roles.create({
       name: "night-owl",
@@ -97,7 +82,7 @@ client.on("ready", async function () {
   guild?.members.cache.map((member) => {
     member.roles.add(nightOWlRole?.id!);
   });
-  
+
   const channel = (await client.channels.fetch(
     process.env.CHANNEL_ID!
   )) as TextChannel;
@@ -105,16 +90,16 @@ client.on("ready", async function () {
     SendMessages: false,
     ViewChannel: true,
   });
-  
+  sendRemainingTime(channel);
 });
 
-client.on("messageCreate", async (message) => {
-  console.log(
-    `ChannelId: ${message.channelId}, ChannelName: ${
-      (message.channel as TextChannel)?.name
-    }`
-  );
-});
+// client.on("messageCreate", async (message) => {
+//   console.log(
+//     `ChannelId: ${message.channelId}, ChannelName: ${
+//       (message.channel as TextChannel)?.name
+//     }`
+//   );
+// });
 
 // Grant night-owl Role to new Users
 client.on("guildMemberAdd", (member) => {

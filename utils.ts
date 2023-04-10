@@ -1,3 +1,5 @@
+import { TextChannel } from "discord.js";
+
 export const getRemainingTime = () => {
   const availableTime = new Date();
   if (availableTime.getHours() < 18) {
@@ -20,3 +22,20 @@ export const getRemainingTime = () => {
   return `Shh Owls are sleeping: ${remainingTimeString}.`;
 };
 
+export const sendRemainingTime = async (channel: TextChannel) => {
+  const messages = await channel.messages.fetch();
+  await channel?.bulkDelete(messages);
+  const msg = await channel?.send(getRemainingTime());
+  const intervalId = setInterval(() => {
+    const now = new Date();
+    const closeHours = new Date();
+    closeHours.setHours(18);
+    closeHours.setMinutes(0);
+    closeHours.setSeconds(0);
+    closeHours.setMilliseconds(0);
+    if (now >= closeHours) {
+      clearInterval(intervalId);
+    }
+    msg.edit(getRemainingTime());
+  }, 5000);
+};
