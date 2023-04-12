@@ -18,13 +18,15 @@ export const getRemainingTime = () => {
     msg: `[🦉] Shh Owls are sleeping: ${remainingTimeString}.`,
     time: diff,
   };
-  // return `Shh Owls are sleeping: ${remainingTimeString}.`;
 };
 
 export const sendRemainingTime = async (channel: TextChannel) => {
-  const messages = await channel.messages.fetch();
-  await channel?.bulkDelete(messages);
-  const { threads } = await channel.threads.fetch();
+  let messages = await channel.messages.fetch({ limit: 100 });
+  while (messages.size > 0) {
+    await channel.bulkDelete(messages);
+    messages = await channel.messages.fetch({ limit: 100 });
+  }
+  let { threads } = await channel.threads.fetch();
 
   threads.forEach(async (thread) => {
     await thread.delete();
@@ -41,7 +43,7 @@ export const sendRemainingTime = async (channel: TextChannel) => {
       console.error(error);
       clearInterval(intervalId);
     }
-  }, 5000);
+  }, 10000);
   setTimeout(() => {
     clearInterval(intervalId);
   }, getRemainingTime().time);

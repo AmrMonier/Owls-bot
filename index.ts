@@ -1,10 +1,10 @@
 import { Client, IntentsBitField, Role, TextChannel } from "discord.js";
 import { config } from "dotenv";
-import { schedule } from "node-cron";
+import { Cron } from "croner";
 import { getRemainingTime, sendRemainingTime } from "./utils";
 config();
 
-import {KeepAlive} from './server'
+import { KeepAlive } from "./server";
 const client = new Client({
   intents: [
     IntentsBitField.Flags.Guilds,
@@ -17,7 +17,7 @@ const client = new Client({
 });
 
 // Open Owls
-schedule(
+Cron(
   "0 18 * * *",
   async () => {
     console.log("Owls Opened");
@@ -31,8 +31,11 @@ schedule(
       SendMessages: true,
       ViewChannel: true,
     });
-    const messages = await channel.messages.fetch();
-    await channel?.bulkDelete(messages);
+    let messages = await channel.messages.fetch({ limit: 100 });
+    while (messages.size > 0) {
+      await channel.bulkDelete(messages);
+      messages = await channel.messages.fetch({ limit: 100 });
+    }
   },
   {
     timezone: "Africa/Cairo",
@@ -40,7 +43,7 @@ schedule(
 );
 
 // Close Owls
-schedule(
+Cron(
   "0 6 * * *",
   async () => {
     console.log("Owls Closed");
@@ -82,15 +85,20 @@ client.on("ready", async function () {
   guild?.members.cache.map((member) => {
     member.roles.add(nightOWlRole?.id!);
   });
-
+  guild?.members.cache.clear();
   const channel = (await client.channels.fetch(
     process.env.CHANNEL_ID!
   )) as TextChannel;
+  const now = new Date();
+  const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18);
   channel.permissionOverwrites.create(nightOWlRole!, {
-    SendMessages: false,
+    SendMessages: now.getTime() > target.getTime(),
     ViewChannel: true,
   });
-  sendRemainingTime(channel);
+
+  if (now.getTime() < target.getTime()) {
+    sendRemainingTime(channel);
+  }
 });
 
 // client.on("messageCreate", async (message) => {
@@ -111,4 +119,4 @@ client.on("guildMemberAdd", (member) => {
 });
 client.login(process.env.BOT_TOKEN);
 console.log(getRemainingTime().msg);
-KeepAlive()
+KeepAlive();
